@@ -125,6 +125,44 @@ namespace EnigmatShopAPI.Migrations
                     b.ToTable("ES_PurchaseDetail_TM");
                 });
 
+            modelBuilder.Entity("EnigmatShopAPI.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("NVarchar(50)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("NVarchar(150)")
+                        .HasColumnName("password");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("NVarchar(10)")
+                        .HasColumnName("role");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("NVarchar(50)")
+                        .HasColumnName("username");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ES_User_TM");
+                });
+
             modelBuilder.Entity("EnigmatShopAPI.Models.Purchase", b =>
                 {
                     b.HasOne("EnigmatShopAPI.Models.Customer", "Customer")

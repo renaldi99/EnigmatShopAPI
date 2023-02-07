@@ -1,4 +1,5 @@
 ﻿using EnigmatShopAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace EnigmatShopAPI.Repositories
@@ -14,37 +15,56 @@ namespace EnigmatShopAPI.Repositories
 
         public Customer Attach(Customer entity)
         {
-            throw new NotImplementedException();
+            var result = _appDbContext.Set<Customer>().Attach(entity);
+            return result.Entity;
         }
 
-        public Task<int> Delete(Customer entity)
+        public async Task<Customer> Delete(Customer entity)
         {
-            throw new NotImplementedException();
+            var result = _appDbContext.Set<Customer>().Remove(entity);
+            return result.Entity; 
         }
 
-        public Task<List<Customer>> FindAllAsync()
+        public async Task<List<Customer>> FindAllAsync()
         {
-            throw new NotImplementedException();
+            var result = await _appDbContext.Set<Customer>().ToListAsync();
+            return result;
         }
 
-        public Task<List<Customer>> FindAllAsync(Expression<Func<Customer, bool>> criteria)
+        public async Task<List<Customer>> FindAllAsync(Expression<Func<Customer, bool>> criteria)
         {
-            throw new NotImplementedException();
+            var result = await _appDbContext.Set<Customer>().Where(criteria).ToListAsync();
+            return result;
         }
 
-        public Task<List<Customer>> FindAllAsync(Expression<Func<Customer, bool>> criteria, string[] includes)
+        public async Task<List<Customer>> FindAllAsync(Expression<Func<Customer, bool>> criteria, string[] includes)
         {
-            throw new NotImplementedException();
+            var query = _appDbContext.Set<Customer>().AsQueryable();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await _appDbContext.Set<Customer>().Where(criteria).ToListAsync();
         }
 
-        public Task<Customer?> FindAsync(Expression<Func<Customer, bool>> criteria)
+        public async Task<Customer?> FindAsync(Expression<Func<Customer, bool>> criteria)
         {
-            throw new NotImplementedException();
+            var result = await _appDbContext.Set<Customer>().Where(criteria).FirstOrDefaultAsync();
+            return result;
         }
 
-        public Task<Customer?> FindAsync(Expression<Func<Customer, bool>> criteria, string[] includes)
+        public async Task<Customer?> FindAsync(Expression<Func<Customer, bool>> criteria, string[] includes)
         {
-            throw new NotImplementedException();
+            var query = _appDbContext.Set<Customer>().AsQueryable();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await _appDbContext.Set<Customer>().Where(criteria).FirstOrDefaultAsync();
         }
 
         public async Task<Customer?> FindByIdAsync(Guid id)
@@ -61,7 +81,9 @@ namespace EnigmatShopAPI.Repositories
 
         public Customer Update(Customer entity)
         {
-            throw new NotImplementedException();
+            Attach(entity);
+            var result = _appDbContext.Set<Customer>().Update(entity);
+            return result.Entity;
         }
     }
 }

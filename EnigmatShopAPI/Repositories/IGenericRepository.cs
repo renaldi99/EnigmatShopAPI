@@ -13,7 +13,7 @@ namespace EnigmatShopAPI.Repositories
         Task<List<T>> FindAllAsync(Expression<Func<T, bool>> criteria);
         Task<List<T>> FindAllAsync(Expression<Func<T, bool>> criteria, string[] includes);
         T Update(T entity);
-        Task<int> Delete(T entity);
+        Task<T> Delete(T entity);
 
     }
 }

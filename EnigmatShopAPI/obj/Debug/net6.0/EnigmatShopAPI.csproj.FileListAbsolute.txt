@@ -5,9 +5,15 @@ C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\EnigmatShopAPI.runtimeconfig.json
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\EnigmatShopAPI.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\EnigmatShopAPI.pdb
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Azure.Core.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Azure.Identity.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Humanizer.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
@@ -21,6 +27,8 @@ C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\dwiag\Documents\dive learning\dive-csharp\EnigmatShopAPI\EnigmatShopAPI\bin\Debug\net6.0\Microsoft.Extensions.Options.dll

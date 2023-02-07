@@ -18,7 +18,7 @@ namespace EnigmatShopAPI.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<int> Delete(Product entity)
+        public Task<Product> Delete(Product entity)
         {
             throw new NotImplementedException();
         }

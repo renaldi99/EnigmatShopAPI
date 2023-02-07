@@ -24,15 +24,25 @@ namespace EnigmatShopAPI.Services.Impl
                 var response = await _persistence.SaveChangesAsync();
                 return response;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw new Exception(e.Message);
             }
         }
 
-        public Task<int> DeleteCustomerById(string id)
+        public async Task<int> DeleteCustomerById(string id)
         {
-            throw new NotImplementedException();
+            var customer = await GetCustomerById(id);
+            if (customer == null)
+            {
+                throw new NotFoundException("Customer Doesn't Exist");
+            }
+
+            var result = await _repository.Delete(customer);
+            var response = await _persistence.SaveChangesAsync();
+
+            return response;
+            
         }
 
         public Task<List<Customer>> GetAllCustomer()
@@ -45,18 +55,44 @@ namespace EnigmatShopAPI.Services.Impl
             try
             {
                 var result = await _repository.FindByIdAsync(Guid.Parse(id));
-                if (result is null) throw new NotFoundException("Not Found From Database");
+                if (result is null)
+                {
+                    throw new Exception("Internal Server Error");
+                }
+
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw new Exception(e.Message);
             }
         }
 
-        public Task<Customer> UpdateCustomer(Customer entity)
+        public async Task<Customer> GetCustomerByName(string name)
         {
-            throw new NotImplementedException();
+            var result = await _repository.FindAsync(customer => customer.CustomerName.Equals(name));
+            if (result == null)
+            {
+                throw new NotFoundException($"Not found customer with name: {name}");
+            }
+
+            return result;
+        }
+
+        public async Task<int> UpdateCustomer(Customer entity)
+        {
+            try
+            {
+                var result = _repository?.Update(entity);
+                var response = await _persistence.SaveChangesAsync();
+
+                return response;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
         }
     }
 }
