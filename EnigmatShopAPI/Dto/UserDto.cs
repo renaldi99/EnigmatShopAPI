@@ -5,7 +5,6 @@ namespace EnigmatShopAPI.Dto
 {
     public class UserDto
     {
-        public int Id { get; set; }
         [Required]
         public string? Username { get; set; }
         [Required]
@@ -14,6 +13,7 @@ namespace EnigmatShopAPI.Dto
         public string? Email { get; set; }
         [JsonIgnore]
         public string? Role { get; set; }
+        [JsonIgnore]
         public string? RefreshToken { get; set; }
     }
 }

@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("dev")));
 builder.Services.AddDependencyInjection();
 
-
+// config JWT
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,8 +70,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// add security
 app.UseAuthentication();
 app.UseAuthorization();
+
+// global cors policy
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.MapControllers();
 

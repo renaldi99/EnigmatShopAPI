@@ -7,12 +7,12 @@ namespace EnigmatShopAPI.Models
     public class User
     {
         [Key, Column(name:"id")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required, Column(name: "username", TypeName = "NVarchar(50)")]
         public string? Username { get; set; }
         [Required, Column(name: "email", TypeName = "NVarchar(50)")]
         public string? Email { get; set; }
-        [Required, Column(name: "password", TypeName = "NVarchar(150)")]
+        [Required, Column(name: "password", TypeName = "NVarchar(255)")]
         public string? Password { get; set; }
         [Required, Column(name: "role", TypeName = "NVarchar(10)")]
         public string? Role { get; set; }

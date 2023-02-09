@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnigmatShopAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230203074340_SecondCreate")]
-    partial class SecondCreate
+    [Migration("20230209074119_UsersTableCreate")]
+    partial class UsersTableCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,12 +130,10 @@ namespace EnigmatShopAPI.Migrations
 
             modelBuilder.Entity("EnigmatShopAPI.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -144,7 +142,7 @@ namespace EnigmatShopAPI.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("NVarchar(150)")
+                        .HasColumnType("NVarchar(255)")
                         .HasColumnName("password");
 
                     b.Property<string>("RefreshToken")

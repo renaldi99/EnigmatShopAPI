@@ -39,6 +39,7 @@ namespace EnigmatShopAPI.Controllers
             // create refresh token
             user.Role = "USER";
             user.RefreshToken = Utility.GenerateRefreshToken();
+            user.Password = Utility.EncryptPassword(user.Password);
 
             // Mapper disini
             var userMapper = _mapper.Map<User>(user);
@@ -67,16 +68,19 @@ namespace EnigmatShopAPI.Controllers
             }
 
             var checkUser = await _service.GetUserByUsername(username);
-            //var passCheck = Utility.DecryptPassword(checkUser?.Password);
+            var passCheck = Utility.DecryptPassword(checkUser.Password);
 
-            //if (checkUser == null || !passCheck.Equals(password))
-            //{
-            //    return BadRequest(new { code = 400, msg = "User account isn't registered" });
-            //}
+            if (checkUser == null || !passCheck.Equals(password))
+            {
+                return BadRequest(new { code = 400, msg = "User account isn't registered" });
+            }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+            // credential
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            // claims
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, checkUser.Username)

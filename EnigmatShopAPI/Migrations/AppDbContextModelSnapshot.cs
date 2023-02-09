@@ -127,12 +127,10 @@ namespace EnigmatShopAPI.Migrations
 
             modelBuilder.Entity("EnigmatShopAPI.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -141,7 +139,7 @@ namespace EnigmatShopAPI.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("NVarchar(150)")
+                        .HasColumnType("NVarchar(255)")
                         .HasColumnName("password");
 
                     b.Property<string>("RefreshToken")
