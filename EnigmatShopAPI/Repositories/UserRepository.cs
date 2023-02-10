@@ -15,7 +15,8 @@ namespace EnigmatShopAPI.Repositories
 
         public User Attach(User entity)
         {
-            throw new NotImplementedException();
+            var result = _appDbContext.Set<User>().Attach(entity);
+            return result.Entity;
         }
 
         public Task<User> Delete(User entity)
@@ -62,7 +63,10 @@ namespace EnigmatShopAPI.Repositories
 
         public User Update(User entity)
         {
-            throw new NotImplementedException();
+            // update, use attach func before update
+            Attach(entity);
+            var result = _appDbContext.Set<User>().Update(entity);
+            return result.Entity;
         }
     }
 }

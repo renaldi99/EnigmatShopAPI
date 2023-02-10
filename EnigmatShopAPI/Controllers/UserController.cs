@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EnigmatShopAPI.Dto;
+using EnigmatShopAPI.Exceptions;
 using EnigmatShopAPI.Helpers;
 using EnigmatShopAPI.Models;
 using EnigmatShopAPI.Services;
@@ -49,7 +50,7 @@ namespace EnigmatShopAPI.Controllers
             {
                 return BadRequest(new { code = 400, msg = "Username already exist" });
             }
-           
+
             var createUser = await _service.CreateUser(userMapper);
             if (createUser == 0)
             {
@@ -75,6 +76,7 @@ namespace EnigmatShopAPI.Controllers
                 return BadRequest(new { code = 400, msg = "User account isn't registered" });
             }
 
+            // security
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
             // credential
@@ -94,7 +96,80 @@ namespace EnigmatShopAPI.Controllers
             };
             var tokenHandler = new JwtSecurityTokenHandler().CreateToken(_token);
 
-            return Ok(new { code = StatusCodes.Status200OK, token = new JwtSecurityTokenHandler().WriteToken(tokenHandler) , refreshToken = checkUser.RefreshToken });
+            return Ok(new { code = StatusCodes.Status200OK, token = new JwtSecurityTokenHandler().WriteToken(tokenHandler), refreshToken = checkUser.RefreshToken });
+        }
+
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { code = 400, msg = "Invalid request" });
+            }
+
+            var token = model.Token;
+            var refreshToken = model.RefreshToken;
+
+            var principal = GetPrincipalFromExpiredToken(model.Token);
+            if (principal == null)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            // get username from principal token
+            string username = principal.Identity.Name;
+
+            var user = await _service.GetUserByUsername(username);
+            if (user == null || user.RefreshToken != model.RefreshToken)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            // security
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+            // credential
+            var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var _token = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(principal.Claims),
+                Expires = DateTime.Now.AddMinutes(1),
+                SigningCredentials = credential
+            };
+            var tokenHandler = new JwtSecurityTokenHandler().CreateToken(_token);
+
+            var newToken = new JwtSecurityTokenHandler().WriteToken(tokenHandler);
+            var newRefreshToken = Utility.GenerateRefreshToken();
+
+            // update refreshtoken in database when request new token !IMPORTANT FOR SECURITY
+            user.RefreshToken = newRefreshToken;
+            await _service.UpdateUser(user);
+
+            return Ok(new { code = StatusCodes.Status200OK, token = newToken, refreshToken = newRefreshToken  });
+
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            // check validate token
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new TokenNotValidException("Invalid Token");
+            }
+
+            return principal;
 
         }
     }

@@ -39,6 +39,12 @@ namespace EnigmatShopAPI.Middlewares
 					error.path = context.Request.Path;
 					context.Response.StatusCode = (int)HttpStatusCode.NotFound;
 					break;
+				case TokenNotValidException:
+					error.status_code = (int)HttpStatusCode.Unauthorized;
+					error.message = e.Message;
+					error.path = context.Request.Path;
+					context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+					break;
 				case Exception:
 					error.status_code = (int)HttpStatusCode.InternalServerError;
 					error.message = e.Message;

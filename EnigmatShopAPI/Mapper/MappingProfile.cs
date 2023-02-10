@@ -10,7 +10,7 @@ namespace EnigmatShopAPI.Mapper
         {
             // dest => destination, opt => optional
             CreateMap<UserDto, User>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) // jika dto tidak ada attribute bisa di ignore
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(x => x.Username))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(x => x.Email))
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(x => x.Password))

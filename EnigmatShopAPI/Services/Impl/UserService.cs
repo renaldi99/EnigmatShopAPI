@@ -32,5 +32,12 @@ namespace EnigmatShopAPI.Services.Impl
             var result = await _repository.FindAsync(user => user.Username.Equals(username));
             return result;
         }
+
+        public async Task<int> UpdateUser(User entity)
+        {
+            var result = _repository.Update(entity);
+            var response = await _persistence.SaveChangesAsync();
+            return response;
+        }
     }
 }
