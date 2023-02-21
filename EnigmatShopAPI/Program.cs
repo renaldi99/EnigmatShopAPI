@@ -3,8 +3,10 @@ using EnigmatShopAPI.Mapper;
 using EnigmatShopAPI.Middlewares;
 using EnigmatShopAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,12 +17,27 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x =>
+{
+    x.SwaggerDoc("v1", new OpenApiInfo { Title = "ENIGMA SHOP API", Version = "v1" });
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+});
 
 
 // EF core add DBContext
 builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("dev")));
+// DI Service & Repository
 builder.Services.AddDependencyInjection();
+// DI Middleware
+builder.Services.AddTransient<HandleExceptionMiddleware>();
 
 // config JWT
 builder.Services.AddAuthentication(option =>
@@ -52,11 +69,14 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+// add global authorize
+builder.Services.AddAuthorization(option =>
+{
+    option.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+});
+
 //Inisialisasi AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-// DI Middleware
-builder.Services.AddTransient<HandleExceptionMiddleware>();
 
 var app = builder.Build();
 
@@ -65,7 +85,11 @@ app.UseMiddleware<HandleExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        // name tab page
+        options.DocumentTitle = "ENIGMA REST API";
+    });
 }
 
 app.UseHttpsRedirection();

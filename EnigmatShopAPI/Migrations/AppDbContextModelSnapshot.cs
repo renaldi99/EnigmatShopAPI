@@ -56,6 +56,11 @@ namespace EnigmatShopAPI.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("NVarchar(100)")
+                        .HasColumnName("image");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")

@@ -13,9 +13,10 @@ namespace EnigmatShopAPI.Repositories
             _appDbContext = appDbContext;
         }
 
-        public Product Attach(Product entity)
+        public  Product Attach(Product entity)
         {
-            throw new NotImplementedException();
+            var result = _appDbContext.Set<Product>().Attach(entity);
+            return result.Entity;
         }
 
         public Task<Product> Delete(Product entity)
@@ -61,7 +62,9 @@ namespace EnigmatShopAPI.Repositories
 
         public Product Update(Product entity)
         {
-            throw new NotImplementedException();
+            Attach(entity);
+            var result = _appDbContext.Set<Product>().Update(entity);
+            return result.Entity;
         }
     }
 }

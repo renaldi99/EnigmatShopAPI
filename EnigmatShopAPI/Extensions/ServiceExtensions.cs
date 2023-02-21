@@ -9,12 +9,17 @@ namespace EnigmatShopAPI.Extensions
         public static void AddDependencyInjection(this IServiceCollection services)
         {
             services.AddScoped<IPersistence, Persistence>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //services.AddScoped<ICustomerRepository, CustomerRepository>();
+            //services.AddScoped<IProductRepository, ProductRepository>();
+            //services.AddScoped<IUserRepository, UserRepository>();
+
             services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPurchaseService, PurchaseService>();
+            services.AddScoped<IPurchaseDetailService, PurchaseDetailService>();
 
         }
     }

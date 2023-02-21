@@ -6,10 +6,10 @@ namespace EnigmatShopAPI.Services.Impl
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _repository;
+        private readonly IGenericRepository<User> _repository;
         private readonly IPersistence _persistence;
 
-        public UserService(IUserRepository repository, IPersistence persistence)
+        public UserService(IGenericRepository<User> repository, IPersistence persistence)
         {
             _repository = repository;
             _persistence = persistence;

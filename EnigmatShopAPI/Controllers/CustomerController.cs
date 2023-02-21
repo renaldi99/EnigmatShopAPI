@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EnigmatShopAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -68,7 +67,7 @@ namespace EnigmatShopAPI.Controllers
         }
 
         [HttpDelete("DeleteCustomer")]
-        public async Task<IActionResult> DeleteCustomerById([FromBody] string customerId)
+        public async Task<IActionResult> DeleteCustomerById([FromQuery] string customerId)
         {
             if (customerId.Equals(String.Empty))
             {

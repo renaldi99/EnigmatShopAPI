@@ -7,10 +7,10 @@ namespace EnigmatShopAPI.Services.Impl
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository? _repository;
+        private readonly IGenericRepository<Customer>? _repository;
         private readonly IPersistence? _persistence;
 
-        public CustomerService(ICustomerRepository? repository, IPersistence? persistance)
+        public CustomerService(IGenericRepository<Customer>? repository, IPersistence? persistance)
         {
             _repository = repository;
             _persistence = persistance;

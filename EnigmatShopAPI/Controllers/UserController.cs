@@ -4,6 +4,7 @@ using EnigmatShopAPI.Exceptions;
 using EnigmatShopAPI.Helpers;
 using EnigmatShopAPI.Models;
 using EnigmatShopAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +30,7 @@ namespace EnigmatShopAPI.Controllers
             _configuration = configuration;
         }
 
+        [AllowAnonymous]
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDto user)
         {
@@ -60,6 +62,7 @@ namespace EnigmatShopAPI.Controllers
             return Ok(new { code = 200, msg = "Success create user" });
         }
 
+        [AllowAnonymous]
         [HttpPost("LoginUser")]
         public async Task<IActionResult> LoginUser([FromQuery] string username, string password)
         {
@@ -69,9 +72,9 @@ namespace EnigmatShopAPI.Controllers
             }
 
             var checkUser = await _service.GetUserByUsername(username);
-            var passCheck = Utility.DecryptPassword(checkUser.Password);
+            var checkPass = Utility.DecryptPassword(checkUser.Password);
 
-            if (checkUser == null || !passCheck.Equals(password))
+            if (checkUser == null || !checkPass.Equals(password))
             {
                 return BadRequest(new { code = 400, msg = "User account isn't registered" });
             }
@@ -94,11 +97,14 @@ namespace EnigmatShopAPI.Controllers
                 Expires = DateTime.Now.AddMinutes(1),
                 SigningCredentials = credential
             };
-            var tokenHandler = new JwtSecurityTokenHandler().CreateToken(_token);
 
-            return Ok(new { code = StatusCodes.Status200OK, token = new JwtSecurityTokenHandler().WriteToken(tokenHandler), refreshToken = checkUser.RefreshToken });
+            var tokenHandler = new JwtSecurityTokenHandler().CreateToken(_token);
+            var tokenResult = new JwtSecurityTokenHandler().WriteToken(tokenHandler);
+
+            return Ok(new { code = StatusCodes.Status200OK, token = tokenResult, refreshToken = checkUser.RefreshToken });
         }
 
+        [AllowAnonymous]
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken(RefreshTokenDto model)
         {
@@ -110,7 +116,8 @@ namespace EnigmatShopAPI.Controllers
             var token = model.Token;
             var refreshToken = model.RefreshToken;
 
-            var principal = GetPrincipalFromExpiredToken(model.Token);
+            _ = GetPrincipalFromExpiredToken(model.Token, out ClaimsPrincipal principal);
+
             if (principal == null)
             {
                 return BadRequest("Invalid access token or refresh token");
@@ -150,8 +157,11 @@ namespace EnigmatShopAPI.Controllers
 
         }
 
-        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        // GET PRINCIPAL FOR REFRESH TOKEN
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token, out ClaimsPrincipal principal)
         {
+            // untuk decode token
+            // samakan config dengan di program.cs
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = false,
@@ -162,7 +172,7 @@ namespace EnigmatShopAPI.Controllers
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
             // check validate token
             if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -172,5 +182,27 @@ namespace EnigmatShopAPI.Controllers
             return principal;
 
         }
+
+        // END POINT DISPLAY DATA BY MODEL DTO
+        [AllowAnonymous]
+        [HttpGet("GetUserByIdModelDTO")]
+        public async Task<IActionResult> GetUserByModelDto([FromQuery] string username)
+        {
+            if (username == "")
+            {
+                return BadRequest(new { code = 400, msg = "Invalid request" });
+            }
+
+            User getUser = await _service.GetUserByUsername(username);
+
+            if (getUser == null)
+            {
+                return BadRequest(new { code = 404, msg = "User doesn't exist" });
+            }
+
+            var dataMapperToDto = _mapper.Map<User, UserDto>(getUser);
+
+            return Ok(new {code = StatusCodes.Status200OK, data = dataMapperToDto});
+        } 
     }
 }

@@ -1,14 +1,15 @@
-﻿using EnigmatShopAPI.Models;
+﻿using EnigmatShopAPI.Exceptions;
+using EnigmatShopAPI.Models;
 using EnigmatShopAPI.Repositories;
 
 namespace EnigmatShopAPI.Services.Impl
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository? _repository;
+        private readonly IGenericRepository<Product>? _repository;
         private readonly IPersistence? _persistence;
 
-        public ProductService(IProductRepository? repository, IPersistence? persistence)
+        public ProductService(IGenericRepository<Product>? repository, IPersistence? persistence)
         {
             _repository = repository;
             _persistence = persistence;
@@ -35,14 +36,33 @@ namespace EnigmatShopAPI.Services.Impl
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetProductById(string id)
+        public async Task<Product> GetProductById(string id)
         {
-            throw new NotImplementedException();
+            var result = await _repository.FindAsync(product => product.Id.Equals(Guid.Parse(id)));
+            if (result == null)
+            {
+                throw new NotFoundException($"Product with id {id} doesn't exist");
+            }
+
+            return result;
         }
 
-        public Task<int> UpdateProduct(Product entity)
+        public async Task<int> UpdateProduct(Product entity)
         {
-            throw new NotImplementedException();
+            var _product = await _repository.FindByIdAsync(entity.Id);
+            if (_product == null)
+            {
+                throw new NotFoundException("Error Update Product");
+            }
+
+            _product.ProductName = entity.ProductName;
+            _product.ProductPrice = entity.ProductPrice;
+            _product.Stock = entity.Stock;
+            _product.Image = entity.Image;
+
+            _repository.Update(_product);
+            var response = await _persistence.SaveChangesAsync();
+            return response;
         }
     }
 }

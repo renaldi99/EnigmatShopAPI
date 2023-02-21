@@ -9,11 +9,11 @@ namespace EnigmatShopAPI.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IProductService _service;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService service)
         {
-            _productService = productService;
+            _service = service;
         }
 
         [HttpPost("AddProduct")]
@@ -24,12 +24,30 @@ namespace EnigmatShopAPI.Controllers
                 return BadRequest(new { code = 400, msg = "Invalid request" });
             }
 
-            var res = await _productService.CreateProduct(entity);
+            var res = await _service.CreateProduct(entity);
             if (res == 0)
             {
                 return BadRequest(new { code = 400, msg = "Error request" });
             }
             return Ok(new { code = 200, msg = "Success create product" });
+        }
+
+        [HttpPost("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct([FromBody] Product entity)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { code = 400, msg = "Invalid request" });
+            }
+
+            var res = await _service.UpdateProduct(entity);
+            if (res == 0)
+            {
+                return BadRequest(new { code = 400, msg = "Invalid update request" });
+
+            }
+
+            return Ok(new { code = 200, msg = "Success update product" });
         }
     }
 }
