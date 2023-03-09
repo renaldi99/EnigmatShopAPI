@@ -14,7 +14,7 @@ namespace EnigmatShopAPI.Models
         public string? ProductPrice { get; set; }
         [Required, Column(name: "stock")]
         public int Stock { get; set; }
-        [Column(name: "image", TypeName = "NVarchar(100)")]
+        [Column(name: "image")]
         public string Image { get; set; }
     }
 }

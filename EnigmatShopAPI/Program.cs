@@ -20,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "ENIGMA SHOP API", Version = "v1" });
+    // supaya bisa add auth bearer di swagger
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -75,8 +76,21 @@ builder.Services.AddAuthorization(option =>
     option.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 });
 
-//Inisialisasi AutoMapper
+// Inisialisasi AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Add custom origin
+//const string AllowAllHeadersPolicy = "AllowAllHeadersPolicy";
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(AllowAllHeadersPolicy,
+//        builder =>
+//        {
+//            builder.WithOrigins("http://localhost:7296")
+//                    .AllowAnyMethod()
+//                   .AllowAnyHeader();
+//        });
+//});
 
 var app = builder.Build();
 

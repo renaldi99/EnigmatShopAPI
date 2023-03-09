@@ -26,25 +26,31 @@ namespace EnigmatShopAPI.Services.Impl
             try
             {
                 entity.Date = DateTime.Now;
-                // check customer exist
-
-
                 var savePurchase = await _repository.SaveAsync(entity);
                 await _persistence.SaveChangesAsync();
+
 
                 foreach (var purchaseDetail in entity.PurchaseDetails)
                 {
                     // kurangin stock produk / update
                     var product = await _productService.GetProductById(purchaseDetail.ProductId.ToString());
+
                     if (product.Stock < purchaseDetail.Quantity)
                     {
+
+                        var pDetail = new PurchaseDetailsInfo
+                        {
+                            product_id = product.Id.ToString(),
+                            quantity = purchaseDetail.Quantity,
+                        }; 
+
                         return new PurchaseResponseModel
                         {
                             is_success = false,
-                            message = "Product stock is less than quantity",
+                            message = $"Product {product.ProductName} stock is less than quantity",
                             customer_id = entity.CustomerId,
                             transaction_date = DateTime.Now.ToString("yyyyMMdd"),
-                            purchase_details = new List<PurchaseDetailsInfo>()
+                            purchase_details = new List<PurchaseDetailsInfo> { pDetail}
 
                         };
                     } else

@@ -17,13 +17,20 @@ namespace EnigmatShopAPI.Services.Impl
 
         public async Task<int> CreateProduct(Product entity)
         {
-            var result = await _repository.SaveAsync(entity);
-            if (result == null)
+            try
             {
-                throw new Exception("Internal Server Error");
+                var result = await _repository.SaveAsync(entity);
+                if (result == null)
+                {
+                    throw new Exception("Error Create Product");
+                }
+                var response = await _persistence.SaveChangesAsync();
+                return response;
             }
-            var response = await _persistence.SaveChangesAsync();
-            return response;
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public Task<int> DeleteProductById(string id)
@@ -49,20 +56,27 @@ namespace EnigmatShopAPI.Services.Impl
 
         public async Task<int> UpdateProduct(Product entity)
         {
-            var _product = await _repository.FindByIdAsync(entity.Id);
-            if (_product == null)
+            try
             {
-                throw new NotFoundException("Error Update Product");
+                var _product = await _repository.FindByIdAsync(entity.Id);
+                if (_product == null)
+                {
+                    throw new NotFoundException("Error Update Product");
+                }
+
+                _product.ProductName = entity.ProductName;
+                _product.ProductPrice = entity.ProductPrice;
+                _product.Stock = entity.Stock;
+                _product.Image = entity.Image;
+
+                _repository.Update(_product);
+                var response = await _persistence.SaveChangesAsync();
+                return response;
             }
-
-            _product.ProductName = entity.ProductName;
-            _product.ProductPrice = entity.ProductPrice;
-            _product.Stock = entity.Stock;
-            _product.Image = entity.Image;
-
-            _repository.Update(_product);
-            var response = await _persistence.SaveChangesAsync();
-            return response;
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

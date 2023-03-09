@@ -31,7 +31,7 @@ namespace EnigmatShopAPI.Controllers
                 return BadRequest(new { code = 400, data = result });
             }
 
-                return Ok(new { status = 200, data = result });
+            return Ok(new { code = 200, data = result });
 
         }
     }

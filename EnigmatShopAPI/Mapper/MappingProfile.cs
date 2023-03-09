@@ -8,7 +8,7 @@ namespace EnigmatShopAPI.Mapper
     {
         public MappingProfile()
         {
-            // <source / opt, destination / dest>
+            // <source, destination>
             CreateMap<UserDto, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()) // jika dto tidak ada attribute bisa di ignore
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(x => x.Username))
@@ -21,6 +21,20 @@ namespace EnigmatShopAPI.Mapper
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(x => x.Username))
                 .ForMember(dest => dest.Password, opt => opt.Ignore())
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(x => x.Email));
+
+            CreateMap<ProductDto, Product>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(x => x.ProductName))
+                .ForMember(dest => dest.ProductPrice, opt => opt.MapFrom(x => x.ProductPrice))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(x => x.Stock))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(x => x.Image));
+
+            CreateMap<UpdateProductDto, Product>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Id))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(x => x.ProductName))
+                .ForMember(dest => dest.ProductPrice, opt => opt.MapFrom(x => x.ProductPrice))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(x => x.Stock))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(x => x.Image));
         }
     }
 }
