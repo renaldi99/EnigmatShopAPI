@@ -89,9 +89,12 @@ namespace EnigmatShopAPI.Services.Impl
             
         }
 
-        public Task<int> DeletePurchaseById(string id)
+        public async Task<int> DeletePurchaseById(string id)
         {
-            throw new NotImplementedException();
+            var result = await _repository.FindAsync(pur => pur.Id.Equals(Guid.Parse(id)));
+            var deleteResult = await _repository.Delete(result);
+            var response = await _persistence.SaveChangesAsync();
+            return response;
         }
 
         public Task<List<Purchase>> GetAllPurchase()
@@ -101,7 +104,7 @@ namespace EnigmatShopAPI.Services.Impl
 
         public async Task<Purchase> GetPurchaseById(string id)
         {
-            var result = await _repository.FindAsync(pur => pur.Id.Equals(id));
+            var result = await _repository.FindAsync(pur => pur.Id.Equals(Guid.Parse(id)));
             if (result == null)
             {
                 throw new NotFoundException($"Purchase with id {id} not exist");

@@ -4,4 +4,9 @@
     {
         public IFormFile Image { get; set; }
     }
+
+    public class UploadImage64
+    {
+        public string StrImage { get; set; }
+    }
 }

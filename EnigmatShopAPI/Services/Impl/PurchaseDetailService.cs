@@ -21,9 +21,13 @@ namespace EnigmatShopAPI.Services.Impl
             return response;
         }
 
-        public Task<int> DeletePurchaseDetailById(string id)
+        public async Task<int> DeletePurchaseDetailById(string id)
         {
-            throw new NotImplementedException();
+            var result = await _repository.FindByIdAsync(Guid.Parse(id));
+            var deleteResult = await _repository.Delete(result);
+            var response = await _persistence.SaveChangesAsync();
+            return response;
+
         }
 
         public Task<List<PurchaseDetail>> GetAllPurchaseDetail()

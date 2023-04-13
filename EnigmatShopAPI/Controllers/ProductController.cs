@@ -213,5 +213,20 @@ namespace EnigmatShopAPI.Controllers
 
             return Ok(new { code = 200, msg = "Success upload image" });
         }
+
+        [HttpPost("UploadImageBase64")]
+        public async Task<ActionResult> UploadImageBase64([FromBody] UploadImage64 image)
+        {
+            byte[] imgBytes = Convert.FromBase64String(image.StrImage);
+            var nameFile = Guid.NewGuid() + ".jpg";
+            var currentResource = Path.Combine(Directory.GetCurrentDirectory(), "Resource\\ProductImage");
+
+            var merge = Path.Combine(currentResource, nameFile.ToString());
+
+            System.IO.File.WriteAllBytes(merge, imgBytes);
+
+            return Ok(new { code = 200, msg = "Success upload base64 image" });
+
+        }
     }
 }

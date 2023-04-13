@@ -1,5 +1,6 @@
 ﻿using EnigmatShopAPI.Models;
 using EnigmatShopAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace EnigmatShopAPI.Controllers
         }
 
         [HttpPost("AddPurchaseTransaction")]
-        public async Task<ActionResult> CreatePurchase(Purchase payload)
+        public async Task<ActionResult> CreatePurchase([FromBody]Purchase payload)
         {
             if (!ModelState.IsValid)
             {
@@ -33,6 +34,22 @@ namespace EnigmatShopAPI.Controllers
 
             return Ok(new { code = 200, data = result });
 
+        }
+
+        [AllowAnonymous]
+        [HttpPost("GetPurchaseTransaction")]
+        public async Task<ActionResult> GetPurchaseById([FromQuery] string id)
+        {
+            var result = await _service.GetPurchaseById(id);
+            return Ok(new { code = 200, data = result });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("DeletePurchaseTransaction")]
+        public async Task<ActionResult> DeletePurchaseById([FromQuery] string id)
+        {
+            var result = await _service.DeletePurchaseById(id);
+            return Ok(new { code = 200, message = "Purchase success deleted" });
         }
     }
 }
